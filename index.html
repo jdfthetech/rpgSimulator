@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    
+    <link rel="stylesheet" type="text/css" href="default.css">
+    <meta charset="UTF-8">
+    <title>RPG Simulater Super Alpha 0.1.0</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  </head>
+
+  <body>
+ 
+    <h1><center>Squirrel Fire Wizard!</center></h1>
+  
+<div class="container">
+
+  <div class="strengthTextField">
+    Strength
+  </div>
+
+  <div class="strengthTextStatsField">
+    <div id="strRandom">
+    10
+    </div>
+  </div>
+
+  <div class="dexterityTextField">
+    Dexterity
+  </div>.
+
+  <div class="dexterityTextStatsField">
+    <div id="dexRandom">
+      10
+      </div>
+  </div>  
+
+  <div class="constitutionTextField">
+    Constitution
+  </div>
+  <div class="constitutionTextStatsField">
+    <div id="conRandom">
+      10
+      </div>
+  </div>  
+
+
+  <div class="actionsDialogue">
+    <div id="actionModule">These are your actions!</div>
+  </div>
+
+  <div class="timePlayed">
+    <div id="timePassed">starting . . ..     </div>
+    <div id="chicken">starting . . ..     </div>
+  </div> 
+
+
+  <div class="bookGridPos">
+
+      <div class="positionBook">
+
+        <img src="leatherbook_small.png" class="bookImg">
+      </div>
+
+      <div class="charImgLoc">
+          <img src= "squareSquirrel_400.png" class="charImg">
+      </div>  
+      
+  </div>
+
+  <div class="charLife">
+
+    <div class="hitPoints">
+      Hitpoints
+    </div>
+    
+    <div class="hitPointsValue">
+      20
+    </div>
+
+    <div class="armorPoints">
+      Armor
+    </div>
+    
+    <div class="armorPointsValue">
+      20
+    </div>    
+
+  </div>
+
+  <div class="xpBox">
+    <div class="xpName">
+      Experience Points:
+    </div>
+    <div class="xpNumerals">
+      <div id="xpValue">
+        0
+      </div>
+    </div>    
+  </div>
+
+  <div class="intelligenceTextField">
+    Intelligence
+  </div>
+  <div class="intelligenceTextStatsField">
+    <div id="intRandom">
+      10
+      </div>
+  </div>  
+
+ 
+
+  <div class="wisdomTextField">
+    Wisdom
+  </div>
+  <div class="wisdomTextStatsField">
+    <div id="wisRandom">
+      10
+      </div>
+  </div>  
+
+
+
+  <div class="charismaTextField">
+    Charisma
+  </div>
+  <div class="charismaTextStatsField">
+    <div id="chrRandom">
+      10
+      </div>
+  </div>  
+
+  <div class="questDialogue">
+    This your quest dialogue!
+  </div>
+ 
+</div> 
+
+  </body>
+  
+  <script>
+    require('./renderer.js')
+    require('./functions.js')
+  </script>
+</html>

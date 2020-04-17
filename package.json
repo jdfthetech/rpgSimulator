@@ -1,0 +1,17 @@
+{
+    "name": "rpgSimulator",
+    "version": "0.1.0",
+    "main": "main.js",
+    "description": "this is a test",
+    "license": "steal this shit",
+    "scripts": {
+        "start": "electron ."
+    },
+    "devDependencies": {
+        "electron": "^8.2.2",
+        "electron-reload": "^1.5.0"
+    },
+    "dependencies": {
+        "line-reader": "^0.4.0"
+    }
+}
