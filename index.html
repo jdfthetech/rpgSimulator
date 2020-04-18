@@ -12,8 +12,14 @@
 
   <body>
  
-    <h1><center>Squirrel Fire Wizard!</center></h1>
-  
+    
+    <form>
+      <Select onchange="change_image(this)" id='my_images'>
+         <option value="./squareSquirrel_400.png">Fire Squirrel Wizard
+         <option value="./soldier_prairiedog.png">Warrior Prarie Dog
+      <select>
+    </form>
+    
 <div class="container">
 
   <div class="strengthTextField">
@@ -47,12 +53,12 @@
 
 
   <div class="actionsDialogue">
-    <div id="actionModule">These are your actions!</div>
+    <div id="actionModule">This is the Battle Dialogue<hr></div>
   </div>
 
   <div class="timePlayed">
     <div id="timePassed">starting . . ..     </div>
-    <div id="chicken">starting . . ..     </div>
+    <div id="battleLengthId">starting . . ..     </div>
   </div> 
 
 
@@ -64,7 +70,9 @@
       </div>
 
       <div class="charImgLoc">
-          <img src= "squareSquirrel_400.png" class="charImg">
+          
+            <img id="image1" src="squareSquirrel_400.png" class="charImg">
+
       </div>  
       
   </div>
@@ -137,10 +145,16 @@
  
 </div> 
 
+
   </body>
-  
+  <script src="./functions.js">  
+  </script>
+
+
+
   <script>
     require('./renderer.js')
-    require('./functions.js')
   </script>
+
+
 </html>

@@ -1,6 +1,5 @@
 const { app, BrowserWindow, Menu } = require('electron')
 
-
 require('electron-reload')(__dirname);
 
 

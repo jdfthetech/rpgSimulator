@@ -52,26 +52,47 @@ document.getElementById('wisRandom').innerHTML = wisdom
 document.getElementById('chrRandom').innerHTML = charisma
 
 
+randomInt = (min,max) => Math.floor(Math.random()*(max-min+1)+min)
+
+
 function baseTimer(){
   i += 1
   timePassed.innerHTML = 'Time Played:' + i
-  chicken.innerHTML = i
+  
 
-  if (i % 23 == 1){
-    xp += 5
-    xpValue.innerHTML = xp
+  const executeAction = function (value,m){
+    return value % m == 0;
   }
 
-  if (i % 6 == 1){
 
-    function generateEncounter (input){
-      var length = input.length;
-      output =  Math.floor((Math.random() * length-1) + 1);
-      return input[output]
-    }
+  xp = executeAction(i,23) ? xp + 5 : xp = xp;
+  xpValue.innerHTML = xp
 
-    enemy = generateEncounter(enemies)
-    weapon = generateEncounter(weapons)
+
+  
+    
+
+  var battleLength =  randomInt(30,55);
+  battleLengthId.innerHTML = battleLength
+
+
+
+if (i % battleLength == 1){
+  
+  function generateEncounter (input){
+    var length = input.length;
+    output =  randomInt(0,length-1);
+    return input[output]
+  }
+
+  enemy = generateEncounter(enemies)
+  weapon = generateEncounter(weapons)
+
+}
+
+
+  if (i % 3 == 1){
+
 
     function enemyAttack(enemy,weapon){
       attack = enemy + " attacks you with it's " + weapon + "<hr>";
@@ -79,9 +100,9 @@ function baseTimer(){
     }
 
     actionModule.innerHTML += enemyAttack(enemy,weapon)
-
+    
+    scrollDown(actionModule)
   }
-
 
 
 }
@@ -95,6 +116,13 @@ function parseTextFiles (filename){
 
 let enemies = parseTextFiles('./enemyNames')
 let weapons = parseTextFiles('./weaponNames')
+
+function change_image(form) {
+
+  var img = form.options[form.selectedIndex].value;  
+  document.getElementById("image1").src = img;
+}
+
 
 
 // only needed to make a new window for the button code
@@ -117,3 +145,12 @@ would add button into html this way:
 <button id="button1">test button1</button>
 
 */
+
+//scroll
+
+function scrollDown(elementID){
+  
+  
+  elementID.parentElement.scrollTop = elementID.clientHeight
+}
+

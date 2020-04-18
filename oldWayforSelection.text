@@ -1,0 +1,31 @@
+
+<div class="charImgLoc">
+          
+        <img id="image1" src="squareSquirrel_400.png" class="charImg">
+
+</div>  
+
+
+
+
+<form>
+    <Select onchange="change_image()" id='my_images'>
+       <option value="./squareSquirrel_400.png">Image One
+       <option value="./soldier_prairiedog.png">Image Two
+    <select>
+  </form>
+  
+    </body>
+    <script src="./functions.js">  
+    </script>
+  
+
+
+function change_image() {
+    var select = document.getElementById('my_images')
+    var selection = select.selectedIndex;
+    var img = select.options[selection].value;  
+    document.getElementById("image1").src = img;
+  }
+  
+  

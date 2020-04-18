@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+ 
+    <link rel="stylesheet" href="main.css">
+</head>
+    <body class="debug">
+        <main class="flex horizontal">
+ 
+            <div class="flex vertical">
+               
+                <div class="panel" data-title="Offensive">
+                    <div class="stat" data-stat="40">Attack</div>
+                    <div class="stat" data-stat="40">Defense</div>
+                    <div class="stat" data-stat="40">Stamina</div>
+                </div>
+ 
+                <div class="panel scroll" data-title="Activity Log">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur, voluptatum voluptatem. Vel obcaecati aliquid esse magni aut aliquam quo repellendus sapiente nostrum, repudiandae eum, in veniam, accusantium fugiat eligendi assumenda!
+                </div>
+ 
+            </div>
+            <div class="flex vertical auto-size">
+                <h1 class="center-text">Title</h1>
+                <div class="flex auto-size center-horizontal">
+                    <div class="image">
+                        lol
+                    </div>
+                </div>
+                <div class="flex horizontal">
+                   
+                    <div>Box 1</div>
+                    <div>Box 1</div>
+                    <div>Box 1</div>
+ 
+                </div>
+ 
+            </div>
+            <div class="flex vertical">
+ 
+               
+                <div class="panel" data-title="Defensive">
+                    <div id="stat-intel" class="stat" data-stat="40">Intelligence</div>
+                    <div id="stat-wisdom" class="stat" data-stat="40">Wisdom</div>
+                    <div id="stat-charisma" class="stat" data-stat="40">Charisma</div>
+                </div>
+ 
+                <div class="panel scroll" data-title="Quest Log">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur, voluptatum voluptatem. Vel obcaecati aliquid esse magni aut aliquam quo repellendus sapiente nostrum, repudiandae eum, in veniam, accusantium fugiat eligendi assumenda!
+                </div>
+               
+            </div>
+ 
+        </main>
+        <script>
+ 
+            let el = document.getElementById('stat-charisma');
+ 
+            setInterval(() => {
+                // edito the data attribute on the element (data-stat)
+                el.dataset.stat++;
+            }, 6000);
+ 
+        </script>
+    </body>
+</html>
+
+
+=-=-=-=-=-=-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="main.css">
+</head>
+    <body class="debug">
+        <main class="flex horizontal">
+
+            <div class="flex vertical">
+                
+                <div class="panel" data-title="Offensive">
+                    <div class="stat" data-stat="40">Attack</div>
+                    <div class="stat" data-stat="40">Defense</div>
+                    <div class="stat" data-stat="40">Stamina</div>
+                </div>
+
+                <div class="panel scroll" data-title="Activity Log">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur, voluptatum voluptatem. Vel obcaecati aliquid esse magni aut aliquam quo repellendus sapiente nostrum, repudiandae eum, in veniam, accusantium fugiat eligendi assumenda!
+                </div>
+
+            </div>
+            <div class="flex vertical auto-size">
+                <h1 class="center-text">Title</h1>
+                <div class="flex auto-size center-horizontal">
+                    <div class="image">
+                        lol
+                    </div>
+                </div>
+                <div class="flex horizontal">
+                    
+                    <div>Box 1</div>
+                    <div>Box 1</div>
+                    <div>Box 1</div>
+
+                </div>
+
+            </div>
+            <div class="flex vertical">
+
+                
+                <div class="panel" data-title="Defensive">
+                    <div id="stat-intel" class="stat" data-stat="40">Intelligence</div>
+                    <div id="stat-wisdom" class="stat" data-stat="40">Wisdom</div>
+                    <div id="stat-charisma" class="stat" data-stat="40">Charisma</div>
+                </div>
+
+                <div class="panel scroll" data-title="Quest Log">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur, voluptatum voluptatem. Vel obcaecati aliquid esse magni aut aliquam quo repellendus sapiente nostrum, repudiandae eum, in veniam, accusantium fugiat eligendi assumenda!
+                </div>
+                
+            </div>
+
+        </main>
+        <script>
+
+            let el = document.getElementById('stat-charisma');
+
+            setInterval(() => {
+                // edito the data attribute on the element (data-stat)
+                el.dataset.stat++;
+            }, 6000);
+
+        </script>
+    </body>
+</html>
+
