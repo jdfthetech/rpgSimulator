@@ -1,13 +1,8 @@
 const electron = require('electron')
 const path = require('path')
 
-
-
-//var testText = document.getElementById('testthis')
-
 let i = 0
 let xp = 0
-
 
 setInterval(baseTimer, 1000);
 
@@ -15,44 +10,36 @@ function statGen(){
   return  Math.floor((Math.random() * 18) + 3);
 }
 
-/*
- function buildObject(){
-    function statGen(){
-      return  Math.floor((Math.random() * 18) + 3);  
-    }
-    return {
-    strength: statGen(),
-    dexterity: statGen(),
-    constitution: statGen(),
-    intelligence: statGen(),
-    wisdom: statGen(),
-    charisma: statGen(),
-
+function generateChar(){
+  return{
+  strength : statGen(),
+  dexterity : statGen(),
+  constitution : statGen(),
+  intelligence : statGen(),
+  wisdom : statGen(),
+  charisma : statGen()
   }
+}
+
+document.getElementById('generateChar').onclick = genChar;
+//use event arg to tell preventDefault not to refresh browser after innerHTML push
+
+var character = {}
+
+function genChar(event) {
+  character = generateChar()
+  document.getElementById('strRandom').innerHTML = character.strength
+  document.getElementById('dexRandom').innerHTML = character.dexterity
+  document.getElementById('conRandom').innerHTML = character.constitution
+  document.getElementById('intRandom').innerHTML = character.intelligence
+  document.getElementById('wisRandom').innerHTML = character.wisdom
+  document.getElementById('chrRandom').innerHTML = character.charisma
+  event.preventDefault();
  }
-*/
-
-
-
-
-// starter variables for stats
-strength = statGen()
-dexterity = statGen()
-constitution = statGen()
-intelligence = statGen()
-wisdom = statGen()
-charisma = statGen()
-
-
-document.getElementById('strRandom').innerHTML = strength
-document.getElementById('dexRandom').innerHTML = dexterity
-document.getElementById('conRandom').innerHTML = constitution
-document.getElementById('intRandom').innerHTML = intelligence
-document.getElementById('wisRandom').innerHTML = wisdom
-document.getElementById('chrRandom').innerHTML = charisma
 
 
 randomInt = (min,max) => Math.floor(Math.random()*(max-min+1)+min)
+
 
 
 function baseTimer(){
@@ -67,10 +54,6 @@ function baseTimer(){
 
   xp = executeAction(i,23) ? xp + 5 : xp = xp;
   xpValue.innerHTML = xp
-
-
-  
-    
 
   var battleLength =  randomInt(30,55);
   battleLengthId.innerHTML = battleLength

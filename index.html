@@ -11,41 +11,46 @@
   </head>
 
   <body>
- 
-    
-    <form>
+     <form>
+      <div class="custom-select" style="width:200px;">
       <Select onchange="change_image(this)" id='my_images'>
          <option value="./squareSquirrel_400.png">Fire Squirrel Wizard
          <option value="./soldier_prairiedog.png">Warrior Prarie Dog
+         <option value="./bearBard.png">Bard Bear
+         <option value="./raccoonFighter.png">Raccoon Fighter
       <select>
+        <button id="generateChar" class="genButton" style="width:250px;">Create Character</button>
+      </div>
     </form>
     
 <div class="container">
 
-  <div class="strengthTextField">
-    Strength
-  </div>
+    
+<div class="strengthTextField imgStatBG" style="--image: url('plaque1.png')">
+        Strength   
+</div>
+    
 
-  <div class="strengthTextStatsField">
+  <div class="strengthTextStatsField imgStatBG" style="--image: url('blackGranite.jpg')">
     <div id="strRandom">
     10
     </div>
   </div>
 
-  <div class="dexterityTextField">
+  <div class="dexterityTextField imgStatBG" style="--image: url('plaque2.png')">
     Dexterity
   </div>.
 
-  <div class="dexterityTextStatsField">
+  <div class="dexterityTextStatsField  imgStatBG" style="--image: url('blackGranite.jpg')">
     <div id="dexRandom">
       10
       </div>
   </div>  
 
-  <div class="constitutionTextField">
+  <div class="constitutionTextField  imgStatBG" style="--image: url('plaque3.png')">
     Constitution
   </div>
-  <div class="constitutionTextStatsField">
+  <div class="constitutionTextStatsField imgStatBG" style="--image: url('blackGranite.jpg')">
     <div id="conRandom">
       10
       </div>
@@ -77,7 +82,7 @@
       
   </div>
 
-  <div class="charLife">
+  <div class="charLife  imgStatBG" style="--image: url('blackGranite.jpg')">
 
     <div class="hitPoints">
       Hitpoints
@@ -108,10 +113,10 @@
     </div>    
   </div>
 
-  <div class="intelligenceTextField">
+  <div class="intelligenceTextField  imgStatBG" style="--image: url('plaque2.png')">
     Intelligence
   </div>
-  <div class="intelligenceTextStatsField">
+  <div class="intelligenceTextStatsField imgStatBG" style="--image: url('blackGranite.jpg')">
     <div id="intRandom">
       10
       </div>
@@ -119,10 +124,10 @@
 
  
 
-  <div class="wisdomTextField">
+  <div class="wisdomTextField  imgStatBG" style="--image: url('plaque3.png')">
     Wisdom
   </div>
-  <div class="wisdomTextStatsField">
+  <div class="wisdomTextStatsField imgStatBG" style="--image: url('blackGranite.jpg')">
     <div id="wisRandom">
       10
       </div>
@@ -130,10 +135,10 @@
 
 
 
-  <div class="charismaTextField">
+  <div class="charismaTextField  imgStatBG" style="--image: url('plaque1.png')">
     Charisma
   </div>
-  <div class="charismaTextStatsField">
+  <div class="charismaTextStatsField imgStatBG" style="--image: url('blackGranite.jpg')">
     <div id="chrRandom">
       10
       </div>
@@ -147,14 +152,11 @@
 
 
   </body>
-  <script src="./functions.js">  
-  </script>
 
+<script src="./functions.js">  
+</script>
 
-
-  <script>
-    require('./renderer.js')
-  </script>
-
-
+<script>
+require('./renderer.js')
+</script>
 </html>
