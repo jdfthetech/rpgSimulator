@@ -1,93 +1,72 @@
 const electron = require('electron')
 const path = require('path')
 
-let i = 0
-let xp = 0
 
-setInterval(baseTimer, 1000);
+randomInt = (min,max) => Math.floor(Math.random()*(max-min)+min)
 
-function statGen(){
-  return  Math.floor((Math.random() * 18) + 3);
-}
+
 
 function generateChar(){
+
+    let strVar = randomInt(3,18);
+    let dexVar = randomInt(3,18);
+    let conVar = randomInt(3,18);
+    let intVar = randomInt(3,18);
+    let wisVar = randomInt(3,18);
+    let chrVar = randomInt(3,18);
+    let armorVar = randomInt(10,15);
+    let hpVar = (conVar / 2 - 5 > 0) ? Math.floor(8 + conVar / 2 - 5) : 8;
+
   return{
-  strength : statGen(),
-  dexterity : statGen(),
-  constitution : statGen(),
-  intelligence : statGen(),
-  wisdom : statGen(),
-  charisma : statGen()
-  }
+
+  strength : strVar,
+  dexterity : dexVar,
+  constitution : conVar,
+  intelligence : intVar,
+  wisdom : wisVar,
+  charisma : chrVar,
+  hp : hpVar,
+  armor : armorVar,
+  xp : 0,
+  gold : 0
+
+ }
+
 }
 
 document.getElementById('generateChar').onclick = genChar;
-//use event arg to tell preventDefault not to refresh browser after innerHTML push
 
+
+//use event arg to tell preventDefault not to refresh browser after innerHTML push
 var character = {}
 
 function genChar(event) {
   character = generateChar()
-  document.getElementById('strRandom').innerHTML = character.strength
-  document.getElementById('dexRandom').innerHTML = character.dexterity
-  document.getElementById('conRandom').innerHTML = character.constitution
-  document.getElementById('intRandom').innerHTML = character.intelligence
-  document.getElementById('wisRandom').innerHTML = character.wisdom
-  document.getElementById('chrRandom').innerHTML = character.charisma
+  document.getElementById('strValue').innerHTML = character.strength
+  document.getElementById('dexValue').innerHTML = character.dexterity
+  document.getElementById('conValue').innerHTML = character.constitution
+  document.getElementById('intValue').innerHTML = character.intelligence
+  document.getElementById('wisValue').innerHTML = character.wisdom
+  document.getElementById('chrValue').innerHTML = character.charisma
+  document.getElementById('hitPointsValue').innerHTML = character.hp
+  document.getElementById('armorPointsValue').innerHTML = character.armor
+  document.getElementById('xpValue').innerHTML = character.xp
   event.preventDefault();
  }
 
 
-randomInt = (min,max) => Math.floor(Math.random()*(max-min+1)+min)
 
-
+let globalTime = 0
+let globalEnemyName = 'Fred'
+let time = "00:00:00"
+setInterval(baseTimer, 1000);
 
 function baseTimer(){
-  i += 1
-  timePassed.innerHTML = 'Time Played:' + i
-  
-
-  const executeAction = function (value,m){
-    return value % m == 0;
-  }
-
-
-  xp = executeAction(i,23) ? xp + 5 : xp = xp;
-  xpValue.innerHTML = xp
-
-  var battleLength =  randomInt(30,55);
-  battleLengthId.innerHTML = battleLength
-
-
-
-if (i % battleLength == 1){
-  
-  function generateEncounter (input){
-    var length = input.length;
-    output =  randomInt(0,length-1);
-    return input[output]
-  }
-
-  enemy = generateEncounter(enemies)
-  weapon = generateEncounter(weapons)
-
-}
-
-
-  if (i % 3 == 1){
-
-
-    function enemyAttack(enemy,weapon){
-      attack = enemy + " attacks you with it's " + weapon + "<hr>";
-      return attack
-    }
-
-    actionModule.innerHTML += enemyAttack(enemy,weapon)
-    
-    scrollDown(actionModule)
-  }
-
-
+  globalTime += 1
+  time = new Date(globalTime * 1000).toISOString().substr(11, 8);
+  document.getElementById('timePassed').innerHTML = "seconds passed: " + globalTime
+  document.getElementById('timePlayed').innerHTML = "time played: " + time
+  battleTimer()
 }
 
 function parseTextFiles (filename){
@@ -100,40 +79,56 @@ function parseTextFiles (filename){
 let enemies = parseTextFiles('./enemyNames')
 let weapons = parseTextFiles('./weaponNames')
 
-function change_image(form) {
+function genRandListVal (input){
+  var length = input.length;
+  output =  randomInt(0,length-1);
+  return input[output]
+}
 
-  var img = form.options[form.selectedIndex].value;  
-  document.getElementById("image1").src = img;
+function generateEnemy(){
+  globalEnemyName = genRandListVal(enemies)
+  weapon = genRandListVal(weapons)
+  enemyDmg = 1
+  enemyHealth = 2
+  charDamage = 1
+  enemyXpVal = 4
+  enemyGold = 3
+}
+
+function battleTimer(){
+  if (globalEnemyName == 'Fred'){
+    generateEnemy()
+  }
+  else{
+    if (globalTime % 3 == 1 && enemyHealth > 0){
+      enemyName = globalEnemyName
+      function enemyAttack(enemyName,weapon){
+        fightText = enemyName + " attacks you with it's " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + charDamage + "<hr>";
+        enemyHealth -= charDamage
+        return fightText
+      }
+      actionModule.innerHTML += enemyAttack(enemyName,weapon)
+      scrollDown(actionModule)
+      
+  
+    }
+    else if(globalTime % 3 == 0 && enemyHealth == 0){
+      function enemyDeath(enemyName){
+        fightText = "You killed the " + enemyName +"!!<br>You gained " + enemyXpVal + "<hr>";
+        character.xp += enemyXpVal
+        document.getElementById('xpValue').innerHTML = character.xp
+        return fightText
+      }
+      actionModule.innerHTML += enemyDeath(enemyName,weapon)
+      scrollDown(actionModule) 
+      generateEnemy()
+    }
+  }
 }
 
 
+  //scroll
 
-// only needed to make a new window for the button code
-const BrowserWindow = electron.remote.BrowserWindow
-
-//how you'd do a button that pops up a window:
-
-/*
-const button1 = document.getElementById('button1')
-button1.addEventListener('click', function(event){
-  const modalPath = path.join('file://',__dirname, 'somefile.html')
-  let win = new BrowserWindow({ width: 400, height: 200})
-  win.on('close', function() {win = null})
-  win.loadURL(modalPath)
-  win.show()
-})
-
-would add button into html this way: 
-
-<button id="button1">test button1</button>
-
-*/
-
-//scroll
-
-function scrollDown(elementID){
-  
-  
-  elementID.parentElement.scrollTop = elementID.clientHeight
-}
-
+  function scrollDown(elementID){
+     elementID.parentElement.scrollTop = elementID.clientHeight
+  }
