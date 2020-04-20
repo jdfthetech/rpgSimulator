@@ -50,6 +50,7 @@ function genChar(event) {
   document.getElementById('armorPointsValue').innerHTML = character.armor
   document.getElementById('xpValue').innerHTML = character.xp
   event.preventDefault();
+  setInterval(baseTimer, 1000);
  }
 
 
@@ -57,7 +58,10 @@ function genChar(event) {
 let globalTime = 0
 let globalEnemyName = 'Fred'
 let time = "00:00:00"
-setInterval(baseTimer, 1000);
+
+// added to genchar event so won't start until click action
+//setInterval(baseTimer, 1000);
+
 
 function baseTimer(){
   globalTime += 1
@@ -112,7 +116,7 @@ function battleTimer(){
     }
     else if(globalTime % 3 == 0 && enemyHealth == 0){
       function enemyDeath(enemyName){
-        fightText = "You killed the " + enemyName +"!!<br>You gained " + enemyXpVal + "<hr>";
+        fightText = "You killed the " + enemyName +"!!<br>You gained " + enemyXpVal + " xp.<hr>";
         character.xp += enemyXpVal
         document.getElementById('xpValue').innerHTML = character.xp
         return fightText
