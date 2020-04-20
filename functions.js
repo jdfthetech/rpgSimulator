@@ -4,8 +4,6 @@ const path = require('path')
 
 randomInt = (min,max) => Math.floor(Math.random()*(max-min)+min)
 
-
-
 function generateChar(){
 
     let strVar = randomInt(3,18);
@@ -126,8 +124,15 @@ function battleTimer(){
   }
 }
 
+//change image
 
-  //scroll
+function change_image(form) {
+
+  var img = form.options[form.selectedIndex].value;  
+  document.getElementById("image1").src = img;
+}
+
+//scroll
 
   function scrollDown(elementID){
      elementID.parentElement.scrollTop = elementID.clientHeight
