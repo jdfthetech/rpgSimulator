@@ -1,7 +1,6 @@
 const electron = require('electron')
 const path = require('path')
 
-
 randomInt = (min,max) => Math.floor(Math.random()*(max-min)+min)
 
 function generateChar(){
@@ -49,27 +48,30 @@ function genChar(event) {
   document.getElementById('hitPointsValue').innerHTML = character.hp
   document.getElementById('armorPointsValue').innerHTML = character.armor
   document.getElementById('xpValue').innerHTML = character.xp
+  document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
   event.preventDefault();
   setInterval(baseTimer, 1000);
+  
  }
 
-
+let questPause = false;
 
 let globalTime = 0
 let globalEnemyName = 'Fred'
 let time = "00:00:00"
-
-// added to genchar event so won't start until click action
-//setInterval(baseTimer, 1000);
-
 
 function baseTimer(){
   globalTime += 1
   time = new Date(globalTime * 1000).toISOString().substr(11, 8);
   document.getElementById('timePassed').innerHTML = "seconds passed: " + globalTime
   document.getElementById('timePlayed').innerHTML = "time played: " + time
+  questGenerator()
   battleTimer()
 }
+
+
+
+
 
 function parseTextFiles (filename){
   let regexBuild = /\n/
@@ -97,12 +99,14 @@ function generateEnemy(){
   enemyGold = 3
 }
 
+
 function battleTimer(){
   if (globalEnemyName == 'Fred'){
     generateEnemy()
   }
   else{
     if (globalTime % 3 == 1 && enemyHealth > 0){
+      questPause = true;
       enemyName = globalEnemyName
       function enemyAttack(enemyName,weapon){
         fightText = enemyName + " attacks you with it's " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + charDamage + "<hr>";
@@ -112,17 +116,20 @@ function battleTimer(){
       actionModule.innerHTML += enemyAttack(enemyName,weapon)
       scrollDown(actionModule)
       
-  
+
     }
     else if(globalTime % 3 == 0 && enemyHealth == 0){
       function enemyDeath(enemyName){
-        fightText = "You killed the " + enemyName +"!!<br>You gained " + enemyXpVal + " xp.<hr>";
+        fightText = "You killed the " + enemyName +"!!<br>You gained " + enemyXpVal + " xp and " + enemyGold + " gold<hr>";
         character.xp += enemyXpVal
+        character.gold += enemyGold
         document.getElementById('xpValue').innerHTML = character.xp
+        document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
         return fightText
       }
       actionModule.innerHTML += enemyDeath(enemyName,weapon)
-      scrollDown(actionModule) 
+      scrollDown(actionModule)
+      questPause = false;
       generateEnemy()
     }
   }
@@ -141,3 +148,29 @@ function change_image(form) {
   function scrollDown(elementID){
      elementID.parentElement.scrollTop = elementID.clientHeight
   }
+
+//quest data
+
+var questInfo = parseTextFiles('./basicQuest')
+
+function questGenerator(){
+  if (questPause == false){
+    questPause = true;
+    questText = genRandListVal(questInfo)
+    document.getElementById('quest').innerHTML += questText + "<hr>"
+    scrollDown(quest)
+    }
+  else{
+      if (globalEnemyName == 'Fred'){
+        document.getElementById('quest').innerHTML += "You are looking for the enemy <hr>"
+        scrollDown(quest)
+      }
+      else{
+      document.getElementById('quest').innerHTML += "You are fighting the " + globalEnemyName + "<hr>"
+      scrollDown(quest)
+      return
+    }
+  }
+}
+
+
