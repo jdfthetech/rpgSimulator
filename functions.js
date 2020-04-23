@@ -1,6 +1,15 @@
 const electron = require('electron')
 const path = require('path')
 
+//race	hp	armor	speed	xp
+const enemyFile1Json = require('./enemyFile1.json')
+Object.create(enemyFile1Json)
+
+//name1	name2
+const namesJson = require('./names.json')
+Object.create(namesJson)
+
+
 randomInt = (min,max) => Math.floor(Math.random()*(max-min)+min)
 
 function generateChar(){
@@ -13,6 +22,7 @@ function generateChar(){
     let chrVar = randomInt(3,18);
     let armorVar = randomInt(10,15);
     let hpVar = (conVar / 2 - 5 > 0) ? Math.floor(8 + conVar / 2 - 5) : 8;
+    let levelVar = 1
 
   return{
 
@@ -24,6 +34,7 @@ function generateChar(){
   charisma : chrVar,
   hp : hpVar,
   armor : armorVar,
+  level : levelVar,
   xp : 0,
   gold : 0
 
@@ -49,6 +60,7 @@ function genChar(event) {
   document.getElementById('armorPointsValue').innerHTML = character.armor
   document.getElementById('xpValue').innerHTML = character.xp
   document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
+  document.getElementById('charLevel').innerHTML = "Level: " + character.level
   event.preventDefault();
   setInterval(baseTimer, 1000);
   
@@ -70,9 +82,6 @@ function baseTimer(){
 }
 
 
-
-
-
 function parseTextFiles (filename){
   let regexBuild = /\n/
   fs = require("fs")
@@ -89,11 +98,53 @@ function genRandListVal (input){
   return input[output]
 }
 
+
+/* function createEnemy(race, name1, name2, dmg, health, armor, xp, gold, loot){
+  this.race = enemyGenRace;
+  this.name1 = enemyGenName1;
+  this.name2 = enemyGenName2;
+  this.dmg = enemyGenDamage;
+  this.health = enemyGenHealth;
+  this.armor = enemyGenArmor;
+  this.gold = enemyGenGold;
+  this.loot = enemyGenLoot;
+}
+
+var newEnemy = new createEnemy() */
+
+//race	hp	armor	speed	xp
+
+function testEnemy(){
+  let x = Object.keys(enemyFile1Json.race).length
+  let i = randomInt(0, x- 1)
+  enemyGenRace = enemyFile1Json.race[i],
+  enemyGenHealth = enemyFile1Json.hp[i],
+  enemyGenArmor = enemyFile1Json.armor[i],
+  enemyGenSpeed = enemyFile1Json.speed[i]
+}
+
+
+//name1	name2
+function nameGenerator(){
+  let x = Object.keys(namesJson.name1).length
+  let i = randomInt(0, x- 1)
+  let z = randomInt(0, x- 1)
+  enName = namesJson.name1[i]
+  enTitle = namesJson.name2[z]
+
+}
+
+
+
+
 function generateEnemy(){
-  globalEnemyName = genRandListVal(enemies)
+  nameGenerator()
+  testEnemy()
+  globalEnemyName = enemyGenRace
+  //globalEnemyName = genRandListVal(enemies)
   weapon = genRandListVal(weapons)
   enemyDmg = 1
-  enemyHealth = 2
+  enemyHealth = enemyGenHealth
   charDamage = 1
   enemyXpVal = 4
   enemyGold = 3
@@ -109,7 +160,7 @@ function battleTimer(){
       questPause = true;
       enemyName = globalEnemyName
       function enemyAttack(enemyName,weapon){
-        fightText = enemyName + " attacks you with it's " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + charDamage + "<hr>";
+        fightText = enemyName + " " + enName + enTitle + " attacks you with it's " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + charDamage + "<hr>";
         enemyHealth -= charDamage
         return fightText
       }
@@ -122,13 +173,14 @@ function battleTimer(){
       function enemyDeath(enemyName){
         fightText = "You killed the " + enemyName +"!!<br>You gained " + enemyXpVal + " xp and " + enemyGold + " gold<hr>";
         character.xp += enemyXpVal
+        levelUp()
         character.gold += enemyGold
         document.getElementById('xpValue').innerHTML = character.xp
         document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
         return fightText
       }
       actionModule.innerHTML += enemyDeath(enemyName,weapon)
-      scrollDown(actionModule)
+      scrollDown(actionModule)      
       questPause = false;
       generateEnemy()
     }
@@ -174,3 +226,11 @@ function questGenerator(){
 }
 
 
+
+function levelUp(){
+  if (character.xp >= ((character.level* 10) ** 2) - (character.xp / 3)){
+    character.level += 1
+    document.getElementById('charLevel').innerHTML = "Level: " + character.level
+    console.log(character.level)
+  }
+}

@@ -11,6 +11,8 @@
   </head>
 
   <body>
+
+
      <form>
       <div class="custom-select" style="width:200px;">
       <Select onchange="change_image(this)" id='my_images'>
@@ -22,146 +24,173 @@
         <button id="generateChar" class="genButton" style="width:250px;">Create Character</button>
       </div>
     </form>
+
+    <!-- main container -->
     
-<div class="container">
+    <div class="container">
 
-    
-<div class="strengthTextField imgStatBG" style="--image: url('plaque1.png')">
-        Strength   
-</div>
-    
-
-  <div class="strengthTextStatsField imgStatBG" style="--image: url('blackGranite.jpg')">
-    <div id="strValue">
-    10
-    </div>
-  </div>
-
-  <div class="dexterityTextField imgStatBG" style="--image: url('plaque2.png')">
-    Dexterity
-  </div>.
-
-  <div class="dexterityTextStatsField  imgStatBG" style="--image: url('blackGranite.jpg')">
-    <div id="dexValue">
-      10
-      </div>
-  </div>  
-
-  <div class="constitutionTextField  imgStatBG" style="--image: url('plaque3.png')">
-    Constitution
-  </div>
-  <div class="constitutionTextStatsField imgStatBG" style="--image: url('blackGranite.jpg')">
-    <div id="conValue">
-      10
-      </div>
-  </div>  
-
-
-  <div class="actionsDialogue">
-    <div id="actionModule">waiting for character selection<hr></div>
-  </div>
-
-  <div class="timePassed">
-    <div id="timePassed">waiting for character selection</div>
-  </div>   
-  
-  <div class="timePlayed">
-    <div id="timePlayed">waiting for character selection</div>
-  </div> 
-    
-
-
-  <div class="bookGridPos">
-
-      <div class="positionBook">
-
-        <img src="leatherbook_small.png" class="bookImg">
+      <div class="topBox">
+        <div id="charLevel">
+        Level: 1  
+        </div>
+        
       </div>
 
-      <div class="charImgLoc">
-          
-            <img id="image1" src="squareSquirrel_400.png" class="charImg">
+      <!-- stat block 1 -->
+      <div class="imgStatBG" style="--image: url('maronneMarble.png')">  
+        <div class="strengthTextField">
+            Strength   
+        </div>
 
-      </div>  
+
+        <div class="strengthTextStatsField">
+          <div id="strValue">
+          10
+          </div>
+        </div>
+      </div>
+
+      <div class="imgStatBG" style="--image: url('maronneMarble2.png')">
+        <div class="dexterityTextField">
+          Dexterity
+        </div>
+
+        <div class="dexterityTextStatsField">
+          <div id="dexValue">
+            10
+          </div>
+        </div>  
+      </div>
+
+      <div class="imgStatBG" style="--image: url('maronneMarble3.png')">      
+        <div class="constitutionTextField">
+          Constitution
+        </div>
+
+        <div class="constitutionTextStatsField">
+          <div id="conValue">
+            10
+          </div>    
+        </div>  
+      </div>
+    <!-- actions stuff-->
+      <div class="actionsDialogue">
+        <div id="actionModule">waiting for character selection<hr></div>
+      </div>
+
+      <div class="timePassed">
+        <div id="timePassed">waiting for character selection</div>
+      </div>   
       
-  </div>
+      <div class="timePlayed">
+        <div id="timePlayed">waiting for character selection</div>
+      </div> 
 
-  <div class="charLife  imgStatBG" style="--image: url('blackGranite.jpg')">
+    <!-- book and char select --> 
 
-    <div class="hitPoints">
-      Hitpoints
-    </div>
-    
-    <div class="hitPointsValue" id="hitPointsValue">
-      20
-    </div>
+      <div class="bookGridPos">
 
-    <div class="armorPoints">
-      Armor
-    </div>
-    
-    <div class="armorPointsValue" id="armorPointsValue">
-      20
-    </div>    
+        <div class="positionBook">
+        <img src="leatherbook_small.png" class="bookImg">
+        </div>
 
-  </div>
+        <div class="charImgLoc">
+        <img id="image1" src="squareSquirrel_400.png" class="charImg">
+        </div>  
 
-  <div class="xpBox">
-    <div class="xpName">
-      Experience Points:
-    </div>
-    <div class="xpNumerals">
-      <div id="xpValue">
-        0
       </div>
-    </div>    
-  </div>
 
-  <div class="intelligenceTextField  imgStatBG" style="--image: url('plaque2.png')">
-    Intelligence
-  </div>
-  <div class="intelligenceTextStatsField imgStatBG" style="--image: url('blackGranite.jpg')">
-    <div id="intValue">
-      10
+      <!-- hp and armor --> 
+      <div class="charLife">
+
+        <div class="hitPoints">
+          Hitpoints
+        </div>
+        
+        <div class="hitPointsValue" id="hitPointsValue">
+          20
+        </div>
+
+        <div class="armorPoints">
+          Armor
+        </div>
+        
+        <div class="armorPointsValue" id="armorPointsValue">
+          20
+        </div>    
+
       </div>
-  </div>  
 
- 
+      <div class="xpBox">
 
-  <div class="wisdomTextField  imgStatBG" style="--image: url('plaque3.png')">
-    Wisdom
-  </div>
-  <div class="wisdomTextStatsField imgStatBG" style="--image: url('blackGranite.jpg')">
-    <div id="wisValue">
-      10
+        <div class="xpName">
+          Experience Points:
+        </div>
+
+        <div class="xpNumerals">
+          <div id="xpValue">
+            0
+          </div>
+        </div>
+
       </div>
-  </div>  
+      <!-- stat block 2 --> 
 
-
-
-  <div class="charismaTextField  imgStatBG" style="--image: url('plaque1.png')">
-    Charisma
-  </div>
-  <div class="charismaTextStatsField imgStatBG" style="--image: url('blackGranite.jpg')">
-    <div id="chrValue">
-      10
+      <div class="imgStatIntBG" style="--image: url('maronneMarble3.png')">       
+        <div class="intelligenceTextField">
+        Intelligence
+        </div>
+        <div class="intelligenceTextStatsField">
+          <div id="intValue">
+          10
+          </div>
+        </div>  
       </div>
-  </div>  
-
-  <div class="questDialogue">
-    <div id="quest">
-    You have begun your journey <hr>
-    </div>
-  </div>
- 
-  <div class="playerMoney">
-    <div id="playerGold">
-      Your gold
-    </div>
-  </div>
 
 
-</div> 
+      <div class="imgStatWisBG" style="--image: url('maronneMarble.png')"> 
+        <div class="wisdomTextField">
+        Wisdom
+        </div>
+        <div class="wisdomTextStatsField">
+          <div id="wisValue">
+          10
+          </div>
+        </div>  
+      </div>
+
+      <div class="imgStatChrBG" style="--image: url('maronneMarble2.png')">
+        <div class="charismaTextField">
+        Charisma
+        </div>
+        <div class="charismaTextStatsField">
+          <div id="chrValue">
+          10
+          </div>
+        </div>  
+      </div>
+
+    <!-- quest stuff-->
+
+      <div class="questDialogue">
+        <div id="quest">
+        You have begun your journey <hr>
+        </div>
+      </div>
+
+    <!-- moneyz  and loot-->  
+      
+      <div class="playerMoney">
+        <div id="playerGold">
+          Your gold
+        </div>
+      </div>
+
+      <div class="bottomRowBG" style="--image: url('rustTex1.jpg')">
+
+      </div>
+
+      </div> 
 
 
   </body>
