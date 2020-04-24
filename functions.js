@@ -2,13 +2,15 @@ const electron = require('electron')
 const path = require('path')
 
 //race	hp	armor	speed	xp
-const enemyFile1Json = require('./enemyFile1.json')
+const enemyFile1Json = require('./level1Enemies.json')
 Object.create(enemyFile1Json)
 
 //name1	name2
 const namesJson = require('./names.json')
 Object.create(namesJson)
 
+const weaponAdverbs = require('./weaponAdverbs')
+Object.create(weaponAdverbs)
 
 randomInt = (min,max) => Math.floor(Math.random()*(max-min)+min)
 
@@ -36,7 +38,9 @@ function generateChar(){
   armor : armorVar,
   level : levelVar,
   xp : 0,
-  gold : 0
+  gold : 0,
+  damage: Math.ceil((levelVar **2) / 8)
+  
 
  }
 
@@ -63,7 +67,6 @@ function genChar(event) {
   document.getElementById('charLevel').innerHTML = "Level: " + character.level
   event.preventDefault();
   setInterval(baseTimer, 1000);
-  
  }
 
 let questPause = false;
@@ -112,7 +115,12 @@ function genRandListVal (input){
 
 var newEnemy = new createEnemy() */
 
-//race	hp	armor	speed	xp
+
+// generate random keys from weapons
+//first pull in all keys then shuffle them
+
+var weaponArray = Object.keys(weaponAdverbs)
+
 
 function testEnemy(){
   let x = Object.keys(enemyFile1Json.race).length
@@ -120,21 +128,37 @@ function testEnemy(){
   enemyGenRace = enemyFile1Json.race[i],
   enemyGenHealth = enemyFile1Json.hp[i],
   enemyGenArmor = enemyFile1Json.armor[i],
-  enemyGenSpeed = enemyFile1Json.speed[i]
+  enemyGenSpeed = enemyFile1Json.speed[i],  
+  enemyGenDmgLow = enemyFile1Json.dmgLow[i],
+  enemyGenDmgHigh = enemyFile1Json.dmgHigh[i],
+  enemyGenDmg = enemyDamage(),
+  enemyGenXpVal = enemyFile1Json.xp[i],
+  enemyGenGold = enemyFile1Json.gold[i]
 }
 
+function enemyDamage(){
+ return randomInt(enemyGenDmgLow,enemyGenDmgHigh)
+}
 
 //name1	name2
+
 function nameGenerator(){
   let x = Object.keys(namesJson.name1).length
   let i = randomInt(0, x- 1)
   let z = randomInt(0, x- 1)
   enName = namesJson.name1[i]
   enTitle = namesJson.name2[z]
-
 }
 
+// generate random keys from an array
+// next step is to build a list of values from the key randomly
 
+function randomKeys(array){
+  keysArray = Object.keys(array)
+  let x = keysArray.length
+  let i = randomInt(0, x- 1)
+  return keysArray[i]
+}
 
 
 function generateEnemy(){
@@ -143,25 +167,27 @@ function generateEnemy(){
   globalEnemyName = enemyGenRace
   //globalEnemyName = genRandListVal(enemies)
   weapon = genRandListVal(weapons)
-  enemyDmg = 1
+  enemyDmg = enemyGenDmg
   enemyHealth = enemyGenHealth
-  charDamage = 1
-  enemyXpVal = 4
-  enemyGold = 3
+  enemyXpVal = enemyGenXpVal
+  enemyGold = enemyGenGold
+
 }
 
 
 function battleTimer(){
   if (globalEnemyName == 'Fred'){
     generateEnemy()
+    
   }
   else{
     if (globalTime % 3 == 1 && enemyHealth > 0){
       questPause = true;
       enemyName = globalEnemyName
       function enemyAttack(enemyName,weapon){
-        fightText = enemyName + " " + enName + enTitle + " attacks you with it's " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + charDamage + "<hr>";
-        enemyHealth -= charDamage
+        enemyDmg = enemyDamage()
+        fightText = enemyName + " " + enName + enTitle + " attacks you with it's " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage + "<hr>";
+        enemyHealth -= character.damage
         return fightText
       }
       actionModule.innerHTML += enemyAttack(enemyName,weapon)
@@ -205,31 +231,32 @@ function change_image(form) {
 
 var questInfo = parseTextFiles('./basicQuest')
 
+var questActionPause = false
+
 function questGenerator(){
   if (questPause == false){
     questPause = true;
     questText = genRandListVal(questInfo)
     document.getElementById('quest').innerHTML += questText + "<hr>"
+    questActionPause = false
     scrollDown(quest)
     }
   else{
-      if (globalEnemyName == 'Fred'){
-        document.getElementById('quest').innerHTML += "You are looking for the enemy <hr>"
-        scrollDown(quest)
-      }
-      else{
-      document.getElementById('quest').innerHTML += "You are fighting the " + globalEnemyName + "<hr>"
-      scrollDown(quest)
-      return
+      if (questActionPause == false){
+        questActionPause = true
+        document.getElementById('quest').innerHTML += "You journey forth on your path of discovery . . .<hr>"
     }
   }
 }
 
+// character values
 
 
 function levelUp(){
   if (character.xp >= ((character.level* 10) ** 2) - (character.xp / 3)){
     character.level += 1
+    character.damage = Math.ceil((character.level **2) / 8)
+    //character.armor
     document.getElementById('charLevel').innerHTML = "Level: " + character.level
     console.log(character.level)
   }
