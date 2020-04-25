@@ -43,7 +43,6 @@ function generateChar(){
   
 
  }
-
 }
 
 document.getElementById('generateChar').onclick = genChar;
@@ -92,11 +91,23 @@ function parseTextFiles (filename){
   return readValue.split(regexBuild)
 }
 
-let enemies = parseTextFiles('./enemyNames')
-let weapons = parseTextFiles('./weaponNames')
-
 function genRandListVal (input){
   var length = input.length;
+  output =  randomInt(0,length-1);
+  return input[output]
+}
+
+function subObjCount(input){
+  var i =0;
+  for (var key in input) {
+    if (input.hasOwnProperty(key)) ++i;
+  }
+  return i;
+}
+
+
+function genRanSubObj (input){
+  var length = subObjCount(input);
   output =  randomInt(0,length-1);
   return input[output]
 }
@@ -116,9 +127,7 @@ function genRandListVal (input){
 var newEnemy = new createEnemy() */
 
 
-// generate random keys from weapons
-//first pull in all keys then shuffle them
-
+// get weapon keys
 var weaponArray = Object.keys(weaponAdverbs)
 
 
@@ -133,7 +142,8 @@ function testEnemy(){
   enemyGenDmgHigh = enemyFile1Json.dmgHigh[i],
   enemyGenDmg = enemyDamage(),
   enemyGenXpVal = enemyFile1Json.xp[i],
-  enemyGenGold = enemyFile1Json.gold[i]
+  enemyGenGold = enemyFile1Json.gold[i],
+  enemyGenWeapon = enemyFile1Json.weapon[i]
 }
 
 function enemyDamage(){
@@ -166,14 +176,19 @@ function generateEnemy(){
   testEnemy()
   globalEnemyName = enemyGenRace
   //globalEnemyName = genRandListVal(enemies)
-  weapon = genRandListVal(weapons)
+  weapon = enemyGenWeapon
+  weaponAction = genRanSubObj(weaponAdverbs[weapon])
   enemyDmg = enemyGenDmg
   enemyHealth = enemyGenHealth
   enemyXpVal = enemyGenXpVal
   enemyGold = enemyGenGold
+  enemySpeed = enemyGenSpeed
 
 }
 
+function enemyRoll(){
+  return randomInt(1,20)
+}
 
 function battleTimer(){
   if (globalEnemyName == 'Fred'){
@@ -186,9 +201,28 @@ function battleTimer(){
       enemyName = globalEnemyName
       function enemyAttack(enemyName,weapon){
         enemyDmg = enemyDamage()
-        fightText = enemyName + " " + enName + enTitle + " attacks you with it's " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage + "<hr>";
+        if (criticalRoll() == 20){
+            if (enemyRoll > enemySpeed / 1.2){
+          fightText = enemyName + " " + enName + enTitle + weaponAction + " " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage * 2 + " Critical HIT!!<hr>";
+          enemyHealth -= character.damage * 2
+          return fightText
+            }
+            else{
+                fightText = enemyName + " " + enName + enTitle + "misses with it's" + " " + weapon + ". " + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage * 2 + " Critical HIT!!<hr>";
+                enemyHealth -= character.damage * 2
+                return fightText        
+            }
+        }
+        else if (enemyRoll > enemySpeed / 15){ 
+        fightText = enemyName + " " + enName + enTitle + weaponAction + " " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage + "<hr>";
         enemyHealth -= character.damage
         return fightText
+        }
+        else{
+            fightText = enemyName + " " + enName + enTitle + "misses with it's" + " " + weapon + ". " + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage + "<hr>";
+            enemyHealth -= character.damage
+            return fightText        
+        }
       }
       actionModule.innerHTML += enemyAttack(enemyName,weapon)
       scrollDown(actionModule)
@@ -250,6 +284,10 @@ function questGenerator(){
 }
 
 // character values
+
+function criticalRoll(){
+  return randomInt(1,20)
+}
 
 
 function levelUp(){
