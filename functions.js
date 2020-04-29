@@ -198,79 +198,94 @@ function enemyRoll(){
 
 
 
-function battleTimer(){
-  if (globalEnemyName == 'Fred'){
-    generateEnemy()
-    fullPlayerHp = character.hp
-    
-  }
-  else{
-    if (globalTime % 3 == 0 && enemyHealth > 0 && character.hp > fullPlayerHp * .125){
-      questPause = true;
-      enemyName = globalEnemyName
+function battleTimer(){try {
+  
+    if (globalEnemyName == 'Fred' && character.hp > 0){
+      generateEnemy()
+      fullPlayerHp = character.hp
       
-      function enemyAttack(enemyName,weapon){
-        enemyDmg = enemyDamage()
-        enemyDice = enemyRoll()
-        if (criticalRoll() == 20){
-            if (enemyDice > enemySpeed * .3 ){
-          fightText = enemyName + " rolled " + enemyDice + "<hr>" + enemyName + " " + enName + enTitle + weaponAction + " " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage * 2 + " Critical HIT!!<hr>";
+    }
+    else{
+      if (globalTime % 3 == 0 && enemyHealth > 0 && character.hp > fullPlayerHp * .125){
+        questPause = true;
+        enemyName = globalEnemyName
+        
+        function enemyAttack(enemyName,weapon){
+          enemyDmg = enemyDamage()
+          enemyDice = enemyRoll()
+          if (criticalRoll() == 20){
+              if (enemyDice > enemySpeed * .3 ){
+            fightText = enemyName + " rolled " + enemyDice + "<hr>" + enemyName + " " + enName + enTitle + weaponAction + " " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage * 2 + " Critical HIT!!<hr>";
+            character.hp -= enemyDmg
+            document.getElementById('hitPointsValue').innerHTML = character.hp
+            enemyHealth -= character.damage * 2
+            return fightText
+              }
+              else{
+                  fightText = enemyName + " rolled " + enemyDice + "<hr>" + enemyName + " " + enName + enTitle + "misses with it's" + " " + weapon + ". " + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage * 2 + " Critical HIT!!<hr>";
+                  enemyHealth -= character.damage * 2
+                  return fightText        
+              }
+                
+          }
+  
+          else if (enemyDice >= enemySpeed * .3 ){ 
+          fightText = enemyName + " rolled " + enemyDice + "<hr>" + enemyName + " " + enName + enTitle + weaponAction + " " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage + "<hr>";
           character.hp -= enemyDmg
           document.getElementById('hitPointsValue').innerHTML = character.hp
-          enemyHealth -= character.damage * 2
+          enemyHealth -= character.damage
           return fightText
-            }
-            else{
-                fightText = enemyName + " rolled " + enemyDice + "<hr>" + enemyName + " " + enName + enTitle + "misses with it's" + " " + weapon + ". " + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage * 2 + " Critical HIT!!<hr>";
-                enemyHealth -= character.damage * 2
-                return fightText        
-            }
-              
+          }
+          // think this is the issue CHECK TOMORROW
+          else if (enemyDice < enemySpeed * .3 ){
+              fightText = enemyName + " rolled " + enemyDice + "<hr>" + enemyName + " " + enName + enTitle + "misses with it's" + " " + weapon + ". " + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage + "<hr>";
+              enemyHealth -= character.damage
+              return fightText        
+          }
         }
-
-        else if (enemyDice > enemySpeed * .3 ){ 
-        fightText = enemyName + " rolled " + enemyDice + "<hr>" + enemyName + " " + enName + enTitle + weaponAction + " " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage + "<hr>";
-        character.hp -= enemyDmg
-        document.getElementById('hitPointsValue').innerHTML = character.hp
-        enemyHealth -= character.damage
-        return fightText
+        actionModule.innerHTML += enemyAttack(enemyName,weapon)
+        scrollDown(actionModule)
+        
+  
+      }
+      else if(globalTime % 3 == 0 && enemyHealth == 0 && character.hp > fullPlayerHp * .125){
+        function enemyDeath(enemyName){
+          fightText = "You killed the " + enemyName +"!!<br>You gained " + enemyXpVal + " xp and " + enemyGold + " gold<hr>";
+          character.xp += enemyXpVal
+          levelUp()
+          character.gold += enemyGold
+          document.getElementById('xpValue').innerHTML = character.xp
+          document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
+          return fightText
         }
-        else{
-            fightText = enemyName + " rolled " + enemyDice + "<hr>" + enemyName + " " + enName + enTitle + "misses with it's" + " " + weapon + ". " + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage + "<hr>";
-            enemyHealth -= character.damage
-            return fightText        
+        actionModule.innerHTML += enemyDeath(enemyName,weapon)
+        scrollDown(actionModule)      
+        generateEnemy()
+      }
+      else if(globalTime % 3 == 0 && enemyHealth > 0 && character.hp > 0 && character.hp <= fullPlayerHp * .125){
+        function playerRetreat(enemyName){
+          fightText = "You are wounded badly by the " + enemyName + " and run away!<hr>";
+          questPause = false;
+          return fightText
         }
+        actionModule.innerHTML += playerRetreat(enemyName)
+        scrollDown(actionModule)      
+  
       }
-      actionModule.innerHTML += enemyAttack(enemyName,weapon)
-      scrollDown(actionModule)
-      
-
-    }
-    else if(globalTime % 3 == 0 && enemyHealth == 0 && character.hp > fullPlayerHp * .125){
-      function enemyDeath(enemyName){
-        fightText = "You killed the " + enemyName +"!!<br>You gained " + enemyXpVal + " xp and " + enemyGold + " gold<hr>";
-        character.xp += enemyXpVal
-        levelUp()
-        character.gold += enemyGold
-        document.getElementById('xpValue').innerHTML = character.xp
-        document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
-        return fightText
+      else if(globalTime % 3 == 0 && character.hp <= 0){
+        function playerDeath(enemyName){
+          fightText = "You were killed by the " + enemyName + "!<hr>" ;
+          questPause = false;
+          return fightText
+        }
+        actionModule.innerHTML += playerDeath(enemyName)
+        scrollDown(actionModule)      
+  
       }
-      actionModule.innerHTML += enemyDeath(enemyName,weapon)
-      scrollDown(actionModule)      
-      questPause = false;
-      generateEnemy()
     }
-    else if(globalTime % 3 == 0 && enemyHealth > 0 && character.hp <= fullPlayerHp * .125){
-      function playerRetreat(enemyName){
-        fightText = "You are wounded badly by the " + enemyName + " and run away!<hr>";
-        return fightText
-      }
-      actionModule.innerHTML += playerRetreat(enemyName)
-      scrollDown(actionModule)      
-      questPause = false;
-    }
-  }
+} catch (err) {
+  console.log(err)
+}
 }
 
 //change image
@@ -294,7 +309,7 @@ var questInfo = parseTextFiles('./basicQuest')
 var questActionPause = false
 
 function questGenerator(){
-  if (questPause == false){
+  if (questPause == false && character.hp > 0){
     questPause = true;
     character.hp = fullPlayerHp
     document.getElementById('quest').innerHTML += "You have healed up and rested at the Inn <hr>"
@@ -303,15 +318,33 @@ function questGenerator(){
     document.getElementById('quest').innerHTML += questText + "<hr>"
     questActionPause = false
     scrollDown(quest)
+    generateEnemy()
+  
+  } 
+ 
+
+  else if (questPause == false && character.hp <= 0){
+    questPause = true;
+    character.hp = fullPlayerHp
+    document.getElementById('quest').innerHTML += "A wandering adventurer finds your body and drags it to the nearest town where a priest resurrects you for a small fee.<hr>"
+    character.gold = Math.floor(character.gold - (character.gold * .25))
+    document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
+    document.getElementById('hitPointsValue').innerHTML = character.hp
+    questText = genRandListVal(questInfo)
+    document.getElementById('quest').innerHTML += questText + "<hr>"
+    questActionPause = false
+    scrollDown(quest)
+    generateEnemy()
     }
   else{
       if (questActionPause == false){
         questActionPause = true
         document.getElementById('quest').innerHTML += "You journey forth on your path of discovery . . .<hr>"
+        scrollDown(quest)
     }
   }
-}
 
+}
 // character values
 
 function criticalRoll(){
@@ -328,5 +361,3 @@ function levelUp(){
     console.log(character.level)
   }
 }
-
-
