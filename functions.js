@@ -1,6 +1,9 @@
 const electron = require('electron')
 const path = require('path')
 
+// import the base functions
+const reusedFunctions = require('./reusedFunctions.js')
+
 //race	hp	armor	speed	xp
 const enemyFile1Json = require('./level1Enemies.json')
 Object.create(enemyFile1Json)
@@ -13,10 +16,22 @@ const weaponAdverbs = require('./weaponAdverbs')
 Object.create(weaponAdverbs)
 
 var fullPlayerHp = 1
+// get weapon keys
+var weaponArray = Object.keys(weaponAdverbs)
 
-randomInt = (min,max) => Math.floor(Math.random()*(max-min)+min)
+var character = {}
 
-function generateChar(){
+var questActionPause = false
+
+let questPause = false;
+let globalTime = 0
+let globalEnemyName = 'Fred'
+let time = "00:00:00"
+
+
+
+
+generateChar = () => {
 
     let strVar = randomInt(3,18);
     let dexVar = randomInt(3,18);
@@ -43,16 +58,12 @@ function generateChar(){
   gold : 0,
   damage: Math.ceil((levelVar **2) / 8)
   
-
  }
 }
 
-
 document.getElementById('generateChar').onclick = genChar;
 
-
 //use event arg to tell preventDefault not to refresh browser after innerHTML push
-var character = {}
 
 function genChar(event) {
   character = generateChar()
@@ -72,13 +83,8 @@ function genChar(event) {
   setInterval(baseTimer, 1000);
  }
 
-let questPause = false;
 
-let globalTime = 0
-let globalEnemyName = 'Fred'
-let time = "00:00:00"
-
-function baseTimer(){
+baseTimer = () => {
   globalTime += 1
   time = new Date(globalTime * 1000).toISOString().substr(11, 8);
   document.getElementById('timePassed').innerHTML = "seconds passed: " + globalTime
@@ -88,55 +94,9 @@ function baseTimer(){
 }
 
 
-function parseTextFiles (filename){
-  let regexBuild = /\n/
-  fs = require("fs")
-  let readValue = fs.readFileSync(filename,'utf-8')
-  return readValue.split(regexBuild)
-}
-
-function genRandListVal (input){
-  var length = input.length;
-  output =  randomInt(0,length-1);
-  return input[output]
-}
-
-function subObjCount(input){
-  var i =0;
-  for (var key in input) {
-    if (input.hasOwnProperty(key)) ++i;
-  }
-  return i;
-}
 
 
-
-function genRanSubObj (input){
-  var length = subObjCount(input);
-  output =  randomInt(0,length-1);
-  return input[output]
-}
-
-
-/* function createEnemy(race, name1, name2, dmg, health, armor, xp, gold, loot){
-  this.race = enemyGenRace;
-  this.name1 = enemyGenName1;
-  this.name2 = enemyGenName2;
-  this.dmg = enemyGenDamage;
-  this.health = enemyGenHealth;
-  this.armor = enemyGenArmor;
-  this.gold = enemyGenGold;
-  this.loot = enemyGenLoot;
-}
-
-var newEnemy = new createEnemy() */
-
-
-// get weapon keys
-var weaponArray = Object.keys(weaponAdverbs)
-
-
-function testEnemy(){
+testEnemy = () => {
   let x = Object.keys(enemyFile1Json.race).length
   let i = randomInt(0, x- 1)
   enemyGenRace = enemyFile1Json.race[i],
@@ -151,13 +111,11 @@ function testEnemy(){
   enemyGenWeapon = enemyFile1Json.weapon[i]
 }
 
-function enemyDamage(){
- return randomInt(enemyGenDmgLow,enemyGenDmgHigh)
-}
+enemyDamage = () => randomInt(enemyGenDmgLow,enemyGenDmgHigh)
 
 //name1	name2
 
-function nameGenerator(){
+nameGenerator = () => {
   let x = Object.keys(namesJson.name1).length
   let i = randomInt(0, x- 1)
   let z = randomInt(0, x- 1)
@@ -165,22 +123,10 @@ function nameGenerator(){
   enTitle = namesJson.name2[z]
 }
 
-// generate random keys from an array
-// next step is to build a list of values from the key randomly
-
-function randomKeys(array){
-  keysArray = Object.keys(array)
-  let x = keysArray.length
-  let i = randomInt(0, x- 1)
-  return keysArray[i]
-}
-
-
-function generateEnemy(){
+generateEnemy = () => {
   nameGenerator()
   testEnemy()
   globalEnemyName = enemyGenRace
-  //globalEnemyName = genRandListVal(enemies)
   weapon = enemyGenWeapon
   weaponAction = genRanSubObj(weaponAdverbs[weapon])
   enemyDmg = enemyGenDmg
@@ -188,17 +134,28 @@ function generateEnemy(){
   enemyXpVal = enemyGenXpVal
   enemyGold = enemyGenGold
   enemySpeed = enemyGenSpeed
+}
 
+hitCheck = (enemyRoll, playerDex, playerAC,enemyName) => {
+  enemyRoll = randomInt(1,20)
+  document.getElementById('actionModule').innerHTML += enemyName + " rolled " + enemyRoll + "<hr>"
+  scrollDown(actionModule)
+  var playerRollModifier = Math.floor((playerDex / 3) + (playerAC / 4)) 
+  var playerRoll = randomInt(playerRollModifier,20)
+  document.getElementById('actionModule').innerHTML += "Your save roll with modifiers was " + playerRoll + "<hr>"
+  scrollDown(actionModule)  
+  if (enemyRoll > playerRoll){
+    return true
+  }
+  else{
+    return false
+  }
 }
 
 
-function enemyRoll(){
-  return randomInt(1,20)
-}
-
-
-
-function battleTimer(){try {
+battleTimer = () => 
+{try 
+  {
   
     if (globalEnemyName == 'Fred' && character.hp > 0){
       generateEnemy()
@@ -209,36 +166,40 @@ function battleTimer(){try {
       if (globalTime % 3 == 0 && enemyHealth > 0 && character.hp > fullPlayerHp * .125){
         questPause = true;
         enemyName = globalEnemyName
-        
+        enemyDice = enemyRoll()
+        var enemyHit = hitCheck(enemyDice,character.dexterity,character.armor,enemyName)
+
         function enemyAttack(enemyName,weapon){
           enemyDmg = enemyDamage()
-          enemyDice = enemyRoll()
+          
+          
           if (criticalRoll() == 20){
-              if (enemyDice > enemySpeed * .3 ){
-            fightText = enemyName + " rolled " + enemyDice + "<hr>" + enemyName + " " + enName + enTitle + weaponAction + " " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage * 2 + " Critical HIT!!<hr>";
+              
+              if (enemyHit == true ){
+            fightText = enemyName + " " + enName + enTitle + weaponAction + " " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage * 2 + " Critical HIT!!<hr>";
             character.hp -= enemyDmg
             document.getElementById('hitPointsValue').innerHTML = character.hp
             enemyHealth -= character.damage * 2
             return fightText
               }
               else{
-                  fightText = enemyName + " rolled " + enemyDice + "<hr>" + enemyName + " " + enName + enTitle + "misses with it's" + " " + weapon + ". " + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage * 2 + " Critical HIT!!<hr>";
+                  fightText = enemyName + " " + enName + enTitle + "misses with it's" + " " + weapon + ". " + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage * 2 + " Critical HIT!!<hr>";
                   enemyHealth -= character.damage * 2
                   return fightText        
               }
                 
           }
   
-          else if (enemyDice >= enemySpeed * .3 ){ 
-          fightText = enemyName + " rolled " + enemyDice + "<hr>" + enemyName + " " + enName + enTitle + weaponAction + " " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage + "<hr>";
+          else if (enemyHit == true ){ 
+          fightText = enemyName + " " + enName + enTitle + weaponAction + " " + weapon + " for " + enemyDmg + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage + "<hr>";
           character.hp -= enemyDmg
           document.getElementById('hitPointsValue').innerHTML = character.hp
           enemyHealth -= character.damage
           return fightText
           }
           // think this is the issue CHECK TOMORROW
-          else if (enemyDice < enemySpeed * .3 ){
-              fightText = enemyName + " rolled " + enemyDice + "<hr>" + enemyName + " " + enName + enTitle + "misses with it's" + " " + weapon + ". " + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage + "<hr>";
+          else if (enemyHit == false ){
+              fightText = enemyName + " " + enName + enTitle + "misses with it's" + " " + weapon + ". " + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage + "<hr>";
               enemyHealth -= character.damage
               return fightText        
           }
@@ -283,14 +244,14 @@ function battleTimer(){try {
   
       }
     }
-} catch (err) {
-  console.log(err)
-}
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 //change image
 
-function change_image(form) {
+change_image = (form) => {
 
   var img = form.options[form.selectedIndex].value;  
   document.getElementById("image1").src = img;
@@ -298,17 +259,13 @@ function change_image(form) {
 
 //scroll
 
-  function scrollDown(elementID){
-     elementID.parentElement.scrollTop = elementID.clientHeight
-  }
+scrollDown = (elementID) => elementID.parentElement.scrollTop = elementID.clientHeight
 
 //quest data
 
 var questInfo = parseTextFiles('./basicQuest')
 
-var questActionPause = false
-
-function questGenerator(){
+questGenerator = () => {
   if (questPause == false && character.hp > 0){
     questPause = true;
     character.hp = fullPlayerHp
@@ -321,7 +278,6 @@ function questGenerator(){
     generateEnemy()
   
   } 
- 
 
   else if (questPause == false && character.hp <= 0){
     questPause = true;
@@ -343,16 +299,11 @@ function questGenerator(){
         scrollDown(quest)
     }
   }
-
 }
+
 // character values
 
-function criticalRoll(){
-  return randomInt(1,20)
-}
-
-
-function levelUp(){
+levelUp = () => {
   if (character.xp >= ((character.level* 10) ** 2) - (character.xp / 3)){
     character.level += 1
     character.damage = Math.ceil((character.level **2) / 8)

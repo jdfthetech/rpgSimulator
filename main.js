@@ -2,8 +2,7 @@ const { app, BrowserWindow, Menu } = require('electron')
 
 require('electron-reload')(__dirname);
 
-
-function createWindow () {
+createWindow = () => {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1340,
