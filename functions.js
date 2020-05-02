@@ -1,5 +1,7 @@
 const electron = require('electron')
 const path = require('path')
+// import quest object
+const quests = require('./quests.js')
 
 // import the base functions
 const reusedFunctions = require('./reusedFunctions.js')
@@ -27,9 +29,6 @@ let questPause = false;
 let globalTime = 0
 let globalEnemyName = 'Fred'
 let time = "00:00:00"
-
-
-
 
 generateChar = () => {
 
@@ -197,7 +196,7 @@ battleTimer = () =>
           enemyHealth -= character.damage
           return fightText
           }
-          // think this is the issue CHECK TOMORROW
+          
           else if (enemyHit == false ){
               fightText = enemyName + " " + enName + enTitle + "misses with it's" + " " + weapon + ". " + "<hr> You hit the " + enemyName + " with your weapon for " + character.damage + "<hr>";
               enemyHealth -= character.damage
@@ -258,12 +257,22 @@ change_image = (form) => {
 }
 
 //scroll
-
 scrollDown = (elementID) => elementID.parentElement.scrollTop = elementID.clientHeight
 
-//quest data
+buildQuestText = () => {
+  var npc = buildQuest().npc
+  var request1 = buildQuest().request1
+  var lostItem = buildQuest().lostItem
+  var request2 = buildQuest().request2
+  var rewardInfo = buildQuest().rewardInfo
+  var xpAward = buildQuest().xpAward
+  var goldAward = buildQuest().goldAward
+  var completionText = buildQuest().completionText
 
-var questInfo = parseTextFiles('./basicQuest')
+  return npc + " " + request1 + " " + lostItem + ". " + request2 + "<br>" + rewardInfo + " " + xpAward + " xp and " + goldAward + " gold."
+
+}
+
 
 questGenerator = () => {
   if (questPause == false && character.hp > 0){
@@ -271,13 +280,12 @@ questGenerator = () => {
     character.hp = fullPlayerHp
     document.getElementById('quest').innerHTML += "You have healed up and rested at the Inn <hr>"
     document.getElementById('hitPointsValue').innerHTML = character.hp
-    questText = genRandListVal(questInfo)
+    questText = buildQuestText()
     document.getElementById('quest').innerHTML += questText + "<hr>"
     questActionPause = false
     scrollDown(quest)
     generateEnemy()
-  
-  } 
+    } 
 
   else if (questPause == false && character.hp <= 0){
     questPause = true;
@@ -286,7 +294,7 @@ questGenerator = () => {
     character.gold = Math.floor(character.gold - (character.gold * .25))
     document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
     document.getElementById('hitPointsValue').innerHTML = character.hp
-    questText = genRandListVal(questInfo)
+    questText = buildQuestText()
     document.getElementById('quest').innerHTML += questText + "<hr>"
     questActionPause = false
     scrollDown(quest)
