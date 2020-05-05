@@ -1,18 +1,15 @@
 const electron = require('electron')
 const path = require('path')
+
+//import enemyBuilder js
+const enemyBuilder = require('./enemyBuilder.js')
+
+
 // import quest object
 const quests = require('./quests.js')
 
 // import the base functions
 const reusedFunctions = require('./reusedFunctions.js')
-
-//race	hp	armor	speed	xp
-const enemyFile1Json = require('./level1Enemies.json')
-Object.create(enemyFile1Json)
-
-//name1	name2
-const namesJson = require('./names.json')
-Object.create(namesJson)
 
 const weaponAdverbs = require('./weaponAdverbs')
 Object.create(weaponAdverbs)
@@ -90,49 +87,6 @@ baseTimer = () => {
   document.getElementById('timePlayed').innerHTML = "time played: " + time
   questGenerator()
   battleTimer()
-}
-
-
-
-
-testEnemy = () => {
-  let x = Object.keys(enemyFile1Json.race).length
-  let i = randomInt(0, x- 1)
-  enemyGenRace = enemyFile1Json.race[i],
-  enemyGenHealth = enemyFile1Json.hp[i],
-  enemyGenArmor = enemyFile1Json.armor[i],
-  enemyGenSpeed = enemyFile1Json.speed[i],  
-  enemyGenDmgLow = enemyFile1Json.dmgLow[i],
-  enemyGenDmgHigh = enemyFile1Json.dmgHigh[i],
-  enemyGenDmg = enemyDamage(),
-  enemyGenXpVal = enemyFile1Json.xp[i],
-  enemyGenGold = enemyFile1Json.gold[i],
-  enemyGenWeapon = enemyFile1Json.weapon[i]
-}
-
-enemyDamage = () => randomInt(enemyGenDmgLow,enemyGenDmgHigh)
-
-//name1	name2
-
-nameGenerator = () => {
-  let x = Object.keys(namesJson.name1).length
-  let i = randomInt(0, x- 1)
-  let z = randomInt(0, x- 1)
-  enName = namesJson.name1[i]
-  enTitle = namesJson.name2[z]
-}
-
-generateEnemy = () => {
-  nameGenerator()
-  testEnemy()
-  globalEnemyName = enemyGenRace
-  weapon = enemyGenWeapon
-  weaponAction = genRanSubObj(weaponAdverbs[weapon])
-  enemyDmg = enemyGenDmg
-  enemyHealth = enemyGenHealth
-  enemyXpVal = enemyGenXpVal
-  enemyGold = enemyGenGold
-  enemySpeed = enemyGenSpeed
 }
 
 hitCheck = (enemyRoll, playerDex, playerAC,enemyName) => {
@@ -216,6 +170,15 @@ battleTimer = () =>
           character.gold += enemyGold
           document.getElementById('xpValue').innerHTML = character.xp
           document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
+          // test quest completion
+          questComplete = true
+          document.getElementById('quest').innerHTML += questRewardText() + "<hr>"
+          scrollDown(quest)  
+          character.gold += xpAward
+          document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
+          character.xp += goldAward
+          document.getElementById('xpValue').innerHTML = character.xp
+          questGenerator()
           return fightText
         }
         actionModule.innerHTML += enemyDeath(enemyName,weapon)
@@ -259,23 +222,35 @@ change_image = (form) => {
 //scroll
 scrollDown = (elementID) => elementID.parentElement.scrollTop = elementID.clientHeight
 
+var completionText = "potatos"
+var goldAward = 1
+var xpAward = 1
+var npc = "larry"
+var lostItem = "lemur"
+
 buildQuestText = () => {
-  var npc = buildQuest().npc
+  npc = buildQuest().npc
   var request1 = buildQuest().request1
-  var lostItem = buildQuest().lostItem
+  lostItem = buildQuest().lostItem
   var request2 = buildQuest().request2
   var rewardInfo = buildQuest().rewardInfo
-  var xpAward = buildQuest().xpAward
-  var goldAward = buildQuest().goldAward
-  var completionText = buildQuest().completionText
-
+  xpAward = buildQuest().xpAward
+  goldAward = buildQuest().goldAward
+  completionText = buildQuest().completionText
+  
   return npc + " " + request1 + " " + lostItem + ". " + request2 + "<br>" + rewardInfo + " " + xpAward + " xp and " + goldAward + " gold."
 
 }
 
+questRewardText = () =>{
+  return npc + " " + completionText + " " + lostItem + ". " + "You receive " + xpAward + " xp and " + goldAward + " gold."
+}
+
+var questComplete = true
 
 questGenerator = () => {
-  if (questPause == false && character.hp > 0){
+  if (questPause == false && questComplete == true){
+    questComplete = false
     questPause = true;
     character.hp = fullPlayerHp
     document.getElementById('quest').innerHTML += "You have healed up and rested at the Inn <hr>"
@@ -285,9 +260,29 @@ questGenerator = () => {
     questActionPause = false
     scrollDown(quest)
     generateEnemy()
-    } 
-
-  else if (questPause == false && character.hp <= 0){
+    }
+    else if (questPause == false && questComplete == false && character.hp >= 1){
+      questPause = true;
+      character.hp = fullPlayerHp
+      document.getElementById('quest').innerHTML += "You have healed up and rested at the Inn <hr>"
+      document.getElementById('hitPointsValue').innerHTML = character.hp
+      character.gold = Math.floor(character.gold - (character.gold * .25))
+      document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
+      document.getElementById('hitPointsValue').innerHTML = character.hp
+      scrollDown(quest)
+      generateEnemy()
+      } 
+    else if (questPause == false && questComplete == false && character.hp <= 0){
+      questPause = true;
+      character.hp = fullPlayerHp
+      document.getElementById('quest').innerHTML += "A wandering adventurer finds your body and drags it to the nearest town where a priest resurrects you for a small fee.<hr>"
+      character.gold = Math.floor(character.gold - (character.gold * .25))
+      document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
+      document.getElementById('hitPointsValue').innerHTML = character.hp
+      scrollDown(quest)
+      generateEnemy()
+      }
+  else if (questPause == false && questComplete == true){
     questPause = true;
     character.hp = fullPlayerHp
     document.getElementById('quest').innerHTML += "A wandering adventurer finds your body and drags it to the nearest town where a priest resurrects you for a small fee.<hr>"
