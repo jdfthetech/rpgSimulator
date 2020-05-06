@@ -22,10 +22,11 @@ var character = {}
 
 var questActionPause = false
 
-let questPause = false;
+let questPause = false
 let globalTime = 0
 let globalEnemyName = 'Fred'
 let time = "00:00:00"
+let mobHasItem = false
 
 generateChar = () => {
 
@@ -89,6 +90,18 @@ baseTimer = () => {
   battleTimer()
 }
 
+mobHasItemCheck = () => {
+  let x = randomInt(1,20)
+  if (x > 13){
+    mobHasItem = true
+
+  }
+  else{
+    mobHasItem = false
+  }
+  
+}
+
 hitCheck = (enemyRoll, playerDex, playerAC,enemyName) => {
   enemyRoll = randomInt(1,20)
   document.getElementById('actionModule').innerHTML += enemyName + " rolled " + enemyRoll + "<hr>"
@@ -113,7 +126,7 @@ battleTimer = () =>
     if (globalEnemyName == 'Fred' && character.hp > 0){
       generateEnemy()
       fullPlayerHp = character.hp
-      
+      mobHasItemCheck()
     }
     else{
       if (globalTime % 3 == 0 && enemyHealth > 0 && character.hp > fullPlayerHp * .125){
@@ -156,6 +169,7 @@ battleTimer = () =>
               enemyHealth -= character.damage
               return fightText        
           }
+       
         }
         actionModule.innerHTML += enemyAttack(enemyName,weapon)
         scrollDown(actionModule)
@@ -164,28 +178,47 @@ battleTimer = () =>
       }
       else if(globalTime % 3 == 0 && enemyHealth == 0 && character.hp > fullPlayerHp * .125){
         function enemyDeath(enemyName){
-          fightText = "You killed the " + enemyName +"!!<br>You gained " + enemyXpVal + " xp and " + enemyGold + " gold<hr>";
-          character.xp += enemyXpVal
-          levelUp()
-          character.gold += enemyGold
-          document.getElementById('xpValue').innerHTML = character.xp
-          document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
-          // test quest completion
-          questComplete = true
-          document.getElementById('quest').innerHTML += questRewardText() + "<hr>"
-          scrollDown(quest)  
-          character.gold += xpAward
-          document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
-          character.xp += goldAward
-          document.getElementById('xpValue').innerHTML = character.xp
-          questGenerator()
-          return fightText
+// moved code to if statements below
+            if (mobHasItem == true){
+              fightText = "You killed the " + enemyName +"!!<br>You gained " + enemyXpVal + " xp and " + enemyGold + " gold<hr>";
+              character.xp += enemyXpVal
+              levelUp()
+              character.gold += enemyGold
+              document.getElementById('xpValue').innerHTML = character.xp
+              document.getElementById('playerGold').innerHTML = "Gold: " + character.gold              
+            // test quest completion
+            document.getElementById('quest').innerHTML += "You found the " + lostItem + "! <hr>"
+            scrollDown(quest)
+            document.getElementById('quest').innerHTML += "You head back to town. <hr>"
+            scrollDown(quest)
+            questComplete = true
+            document.getElementById('quest').innerHTML += questRewardText() + "<hr>"
+            scrollDown(quest)  
+            character.gold += goldAward
+            document.getElementById('playerGold').innerHTML = "Gold: " + character.gold
+            character.xp += xpAward
+            document.getElementById('xpValue').innerHTML = character.xp
+            questGenerator()
+            mobHasItem = false
+            return fightText
+            }
+            else{
+              fightText = "You killed the " + enemyName +"!!<br>You gained " + enemyXpVal + " xp and " + enemyGold + " gold<hr>";
+              character.xp += enemyXpVal
+              levelUp()
+              character.gold += enemyGold
+              document.getElementById('xpValue').innerHTML = character.xp
+              document.getElementById('playerGold').innerHTML = "Gold: " + character.gold              
+
+            return fightText
+            }
         }
-        actionModule.innerHTML += enemyDeath(enemyName,weapon)
+        actionModule.innerHTML += enemyDeath(enemyName)
         scrollDown(actionModule)      
         generateEnemy()
+        mobHasItemCheck()
       }
-      else if(globalTime % 3 == 0 && enemyHealth > 0 && character.hp > 0 && character.hp <= fullPlayerHp * .125){
+      else if(globalTime % 3 == 0 && enemyHealth > 0 && character.hp > 0 && character.hp <= Math.floor(fullPlayerHp * .125)){
         function playerRetreat(enemyName){
           fightText = "You are wounded badly by the " + enemyName + " and run away!<hr>";
           questPause = false;
@@ -193,7 +226,7 @@ battleTimer = () =>
         }
         actionModule.innerHTML += playerRetreat(enemyName)
         scrollDown(actionModule)      
-  
+        
       }
       else if(globalTime % 3 == 0 && character.hp <= 0){
         function playerDeath(enemyName){
@@ -260,6 +293,8 @@ questGenerator = () => {
     questActionPause = false
     scrollDown(quest)
     generateEnemy()
+    mobHasItemCheck()
+    //return
     }
     else if (questPause == false && questComplete == false && character.hp >= 1){
       questPause = true;
@@ -271,6 +306,8 @@ questGenerator = () => {
       document.getElementById('hitPointsValue').innerHTML = character.hp
       scrollDown(quest)
       generateEnemy()
+      mobHasItemCheck()
+      //return
       } 
     else if (questPause == false && questComplete == false && character.hp <= 0){
       questPause = true;
@@ -281,6 +318,8 @@ questGenerator = () => {
       document.getElementById('hitPointsValue').innerHTML = character.hp
       scrollDown(quest)
       generateEnemy()
+      mobHasItemCheck()
+     //return
       }
   else if (questPause == false && questComplete == true){
     questPause = true;
@@ -294,6 +333,8 @@ questGenerator = () => {
     questActionPause = false
     scrollDown(quest)
     generateEnemy()
+    mobHasItemCheck()
+    //return
     }
   else{
       if (questActionPause == false){
