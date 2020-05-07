@@ -53,7 +53,7 @@ generateChar = () => {
   level : levelVar,
   xp : 0,
   gold : 0,
-  damage: Math.ceil((levelVar **2) / 8)
+  damage: Math.ceil(((levelVar **2) / 8) + strVar / 5)
   
  }
 }
@@ -125,6 +125,7 @@ battleTimer = () =>
   
     if (globalEnemyName == 'Fred' && character.hp > 0){
       generateEnemy()
+      enemyModifier()
       fullPlayerHp = character.hp
       mobHasItemCheck()
     }
@@ -176,7 +177,7 @@ battleTimer = () =>
         
   
       }
-      else if(globalTime % 3 == 0 && enemyHealth == 0 && character.hp > fullPlayerHp * .125){
+      else if(globalTime % 3 == 0 && enemyHealth <= 0 && character.hp > 0){
         function enemyDeath(enemyName){
 // moved code to if statements below
             if (mobHasItem == true){
@@ -216,6 +217,7 @@ battleTimer = () =>
         actionModule.innerHTML += enemyDeath(enemyName)
         scrollDown(actionModule)      
         generateEnemy()
+        enemyModifier()
         mobHasItemCheck()
       }
       else if(globalTime % 3 == 0 && enemyHealth > 0 && character.hp > 0 && character.hp <= Math.floor(fullPlayerHp * .125)){
@@ -293,6 +295,7 @@ questGenerator = () => {
     questActionPause = false
     scrollDown(quest)
     generateEnemy()
+    enemyModifier()
     mobHasItemCheck()
     //return
     }
@@ -306,6 +309,7 @@ questGenerator = () => {
       document.getElementById('hitPointsValue').innerHTML = character.hp
       scrollDown(quest)
       generateEnemy()
+      enemyModifier()
       mobHasItemCheck()
       //return
       } 
@@ -318,6 +322,7 @@ questGenerator = () => {
       document.getElementById('hitPointsValue').innerHTML = character.hp
       scrollDown(quest)
       generateEnemy()
+      enemyModifier()
       mobHasItemCheck()
      //return
       }
@@ -333,6 +338,7 @@ questGenerator = () => {
     questActionPause = false
     scrollDown(quest)
     generateEnemy()
+    enemyModifier()
     mobHasItemCheck()
     //return
     }
@@ -347,12 +353,32 @@ questGenerator = () => {
 
 // character values
 
+
+
+
 levelUp = () => {
-  if (character.xp >= ((character.level* 10) ** 2) - (character.xp / 3)){
+  while (character.xp >= ((character.level* 10) ** 2) - (character.xp / 3)){
     character.level += 1
-    character.damage = Math.ceil((character.level **2) / 8)
-    //character.armor
+    character.damage = Math.ceil(((character.level **2) / 8) + character.strength / 5)
+    character.strength += 1
+    character.dexterity += 1
+    character.constitution += 1
+    character.intelligence += 1
+    character.wisdom += 1
+    character.charisma += 1
+    character.hp += 2
+    character.armor += 4
+
+    document.getElementById('strValue').innerHTML = character.strength
+    document.getElementById('dexValue').innerHTML = character.dexterity
+    document.getElementById('conValue').innerHTML = character.constitution
+    document.getElementById('intValue').innerHTML = character.intelligence
+    document.getElementById('wisValue').innerHTML = character.wisdom
+    document.getElementById('chrValue').innerHTML = character.charisma
+    document.getElementById('hitPointsValue').innerHTML = character.hp
+    document.getElementById('armorPointsValue').innerHTML = character.armor
     document.getElementById('charLevel').innerHTML = "Level: " + character.level
     console.log(character.level)
   }
+  return character.level
 }

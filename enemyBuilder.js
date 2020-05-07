@@ -63,6 +63,11 @@ generateEnemy = () => {
     enemyXpVal = enemyGenXpVal
     enemyGold = enemyGenGold
     enemySpeed = enemyGenSpeed
-} 
+}
+
+enemyModifier = () => {
+    enemyGenHealth = Math.floor(enemyGenHealth * (character.level * 1.3))
+    enemyGenDmg = Math.floor(enemyGenDmg * (character.level * .3))
+}
   
   
